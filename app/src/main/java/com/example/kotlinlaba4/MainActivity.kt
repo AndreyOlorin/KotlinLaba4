@@ -10,6 +10,23 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class MainActivity : AppCompatActivity() {
+
+    val question1: Question = Question("Самая большая пустыня в мире — это Сахара", false)
+    val question2: Question = Question("Нил — самая длинная река в мире", false)
+    val question3: Question = Question("В Антарктиде нет постоянного населения", true)
+    val question4: Question = Question("В Европе нет ни одной страны, где официальным языком является арабский", false)
+    val question5: Question = Question("Индийский океан является третьим по величине океаном на Земле", true)
+    val question6: Question = Question("В Бразилии находится крупнейший тропический лес в мире — Амазонка", true)
+    val question7: Question = Question("Африка — это единственный континент, через который проходит экватор", false)
+    val question8: Question = Question("Вторая по площади страна - Канада", true)
+    val question9: Question = Question("Швейцария известна своими широкими пляжами и курортами на побережье моря", false)
+    val question10: Question = Question("Греция состоит из более чем 6000 островов", true)
+
+    val questionList = mutableListOf(question1, question2, question3, question4, question5, question6, question7, question8, question9, question10)
+
+    var countOfQuestion = 0
+    var countRightAnswer = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,18 +41,7 @@ class MainActivity : AppCompatActivity() {
         val buttonTrue = findViewById<Button>(R.id.buttonTrue)
         val buttonNext = findViewById<Button>(R.id.buttonNext)
 
-        val question1: Question = Question("Самая большая пустыня в мире — это Сахара", false)
-        val question2: Question = Question("Нил — самая длинная река в мире", false)
-        val question3: Question = Question("В Антарктиде нет постоянного населения", true)
-        val question4: Question = Question("В Европе нет ни одной страны, где официальным языком является арабский", false)
-        val question5: Question = Question("Индийский океан является третьим по величине океаном на Земле", true)
-        val question6: Question = Question("В Бразилии находится крупнейший тропический лес в мире — Амазонка", true)
-        val question7: Question = Question("Африка — это единственный континент, через который проходит экватор", false)
-        val question8: Question = Question("Вторая по площади страна - Канада", true)
-        val question9: Question = Question("Швейцария известна своими широкими пляжами и курортами на побережье моря", false)
-        val question10: Question = Question("Греция состоит из более чем 6000 островов", true)
-
-        val questionList = mutableListOf(question1, question2, question3, question4, question5, question6, question7, question8, question9, question10)
+        GetNewQuestion(numberOfQuestion, textOfQuestion)
 
         //buttonFalse.setBackgroundColor(Color.BLUE)
         buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
@@ -45,18 +51,45 @@ class MainActivity : AppCompatActivity() {
         buttonFalse.setOnClickListener(){
             buttonFalse.setBackgroundColor(getResources().getColor(R.color.rightButton))
             buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
+            buttonTrue.isClickable = false
+            SetAnswer(false)
         }
 
         buttonTrue.setOnClickListener(){
             buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
             buttonTrue.setBackgroundColor(getResources().getColor(R.color.rightButton))
+            buttonFalse.isClickable = false
+            SetAnswer(true)
         }
 
         buttonNext.setOnClickListener(){
             buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
             buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
-        }
+            GetNewQuestion(numberOfQuestion, textOfQuestion)
 
+            buttonTrue.isClickable = true
+            buttonFalse.isClickable = true
+
+        }
+    }
+
+    fun SetAnswer(answer: Boolean): Unit {
+
+        if (questionList[countOfQuestion - 1].GetDecision(answer)){
+            countRightAnswer++
+        }
+    }
+
+    fun GetNewQuestion(numberOfQuestion: TextView, textOfQuestion: TextView): Unit {
+        if (countOfQuestion < questionList.count()){
+
+            countOfQuestion++
+            numberOfQuestion.text = countOfQuestion.toString() + " / " + questionList.count()
+            textOfQuestion.text = questionList[countOfQuestion - 1].question.toString()
+        }
+        else{
+            numberOfQuestion.text = countRightAnswer.toString()
+        }
     }
 }
 
