@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,9 +32,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-        //button.setOnClickListener(){}
-
-        //val editString = findViewById<TextView>(R.id.editString)
 
         val numberOfQuestion = findViewById<TextView>(R.id.numberOfQuestion)
         val textOfQuestion = findViewById<TextView>(R.id.textOfQuestion)
@@ -43,40 +41,49 @@ class MainActivity : AppCompatActivity() {
 
         GetNewQuestion(numberOfQuestion, textOfQuestion)
 
-        //buttonFalse.setBackgroundColor(Color.BLUE)
         buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
         buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
         buttonNext.setBackgroundColor(getResources().getColor(R.color.neutralButton))
+        buttonNext.isClickable = false
 
         buttonFalse.setOnClickListener(){
-            buttonFalse.setBackgroundColor(getResources().getColor(R.color.rightButton))
-            buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
             buttonTrue.isClickable = false
-            SetAnswer(false)
+            buttonNext.isClickable = true
+            SetAnswer(false, buttonFalse)
         }
 
         buttonTrue.setOnClickListener(){
-            buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
-            buttonTrue.setBackgroundColor(getResources().getColor(R.color.rightButton))
             buttonFalse.isClickable = false
-            SetAnswer(true)
+            buttonNext.isClickable = true
+            SetAnswer(true, buttonTrue)
         }
 
         buttonNext.setOnClickListener(){
-            buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
-            buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
-            GetNewQuestion(numberOfQuestion, textOfQuestion)
 
             buttonTrue.isClickable = true
             buttonFalse.isClickable = true
+            buttonNext.isClickable = false
 
+            if (countOfQuestion == questionList.count()){
+                buttonTrue.isClickable = false
+                buttonFalse.isClickable = false
+                buttonNext.isVisible = false
+            }
+
+            buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
+            buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
+            GetNewQuestion(numberOfQuestion, textOfQuestion)
         }
     }
 
-    fun SetAnswer(answer: Boolean): Unit {
+    fun SetAnswer(answer: Boolean, button: Button): Unit {
 
         if (questionList[countOfQuestion - 1].GetDecision(answer)){
             countRightAnswer++
+            button.setBackgroundColor(getResources().getColor(R.color.rightButton))
+        }
+        else{
+            button.setBackgroundColor(getResources().getColor(R.color.incorrectButton))
         }
     }
 
@@ -88,7 +95,8 @@ class MainActivity : AppCompatActivity() {
             textOfQuestion.text = questionList[countOfQuestion - 1].question.toString()
         }
         else{
-            numberOfQuestion.text = countRightAnswer.toString()
+            numberOfQuestion.text = "Верных ответов - " + countRightAnswer.toString()
+            textOfQuestion.text = "";
         }
     }
 }
