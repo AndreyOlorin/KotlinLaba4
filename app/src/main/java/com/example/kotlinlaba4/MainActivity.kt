@@ -10,8 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 
 class MainActivity : AppCompatActivity() {
+
+    private val quizViewModel: QuizViewModel by viewModels()
 
     val question1: Question = Question("Самая большая пустыня в мире — это Сахара", false)
     val question2: Question = Question("Нил — самая длинная река в мире", false)
@@ -26,17 +30,13 @@ class MainActivity : AppCompatActivity() {
 
     val questionList = mutableListOf(question1, question2, question3, question4, question5, question6, question7, question8, question9, question10)
 
-    var countOfQuestion = 0
-    var countRightAnswer = 0
-
-
+    //var countOfQuestion = 0
+    //var countRightAnswer = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
-
-
 
         val numberOfQuestion = findViewById<TextView>(R.id.numberOfQuestion)
         val textOfQuestion = findViewById<TextView>(R.id.textOfQuestion)
@@ -44,7 +44,8 @@ class MainActivity : AppCompatActivity() {
         val buttonTrue = findViewById<Button>(R.id.buttonTrue)
         val buttonNext = findViewById<Button>(R.id.buttonNext)
 
-        GetNewQuestion(numberOfQuestion, textOfQuestion)
+        numberOfQuestion.text = quizViewModel.countOfQuestion.toString() + " / " + questionList.count()
+        textOfQuestion.text = questionList[quizViewModel.countOfQuestion - 1].question.toString()
 
         buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
         buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             buttonFalse.isClickable = true
             buttonNext.isClickable = false
 
-            if (countOfQuestion == questionList.count()){
+            if (quizViewModel.countOfQuestion == questionList.count()){
                 buttonTrue.isClickable = false
                 buttonFalse.isClickable = false
                 buttonNext.isVisible = false
@@ -84,8 +85,8 @@ class MainActivity : AppCompatActivity() {
 
     fun SetAnswer(answer: Boolean, button: Button): Unit {
 
-        if (questionList[countOfQuestion - 1].GetDecision(answer)){
-            countRightAnswer++
+        if (questionList[quizViewModel.countOfQuestion - 1].GetDecision(answer)){
+            quizViewModel.countRightAnswer++
             button.setBackgroundColor(getResources().getColor(R.color.rightButton))
         }
         else{
@@ -94,13 +95,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun GetNewQuestion(numberOfQuestion: TextView, textOfQuestion: TextView): Unit {
-        if (countOfQuestion < questionList.count()){
-            countOfQuestion++
-            numberOfQuestion.text = countOfQuestion.toString() + " / " + questionList.count()
-            textOfQuestion.text = questionList[countOfQuestion - 1].question.toString()
+        if (quizViewModel.countOfQuestion < questionList.count()){
+            quizViewModel.countOfQuestion++
+            numberOfQuestion.text = quizViewModel.countOfQuestion.toString() + " / " + questionList.count()
+            textOfQuestion.text = questionList[quizViewModel.countOfQuestion - 1].question.toString()
         }
         else{
-            textOfQuestion.text = "Верных ответов - " + countRightAnswer.toString()
+            textOfQuestion.text = "Верных ответов - " + quizViewModel.countRightAnswer.toString()
             textOfQuestion.setTextSize(COMPLEX_UNIT_SP, 26F)
         }
     }
