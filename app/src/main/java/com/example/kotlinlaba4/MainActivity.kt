@@ -47,39 +47,67 @@ class MainActivity : AppCompatActivity() {
         numberOfQuestion.text = quizViewModel.countOfQuestion.toString() + " / " + questionList.count()
         textOfQuestion.text = questionList[quizViewModel.countOfQuestion - 1].question.toString()
 
-        buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
-        buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
-        buttonNext.setBackgroundColor(getResources().getColor(R.color.neutralButton))
-
-        buttonNext.isClickable = false
+        SetButtonsColor(buttonTrue, buttonFalse, buttonNext, quizViewModel.userAnswer)
 
         buttonFalse.setOnClickListener(){
-            buttonTrue.isClickable = false
-            buttonNext.isClickable = true
+            quizViewModel.userAnswer = "false"
+            SetButtonsColor(buttonTrue, buttonFalse, buttonNext, quizViewModel.userAnswer)
             SetAnswer(false, buttonFalse)
         }
 
         buttonTrue.setOnClickListener(){
-            buttonFalse.isClickable = false
-            buttonNext.isClickable = true
+            quizViewModel.userAnswer = "true"
+            SetButtonsColor(buttonTrue, buttonFalse, buttonNext, quizViewModel.userAnswer)
             SetAnswer(true, buttonTrue)
         }
 
         buttonNext.setOnClickListener(){
 
-            buttonTrue.isClickable = true
-            buttonFalse.isClickable = true
-            buttonNext.isClickable = false
+            quizViewModel.userAnswer = "nothing"
+            SetButtonsColor(buttonTrue, buttonFalse, buttonNext, quizViewModel.userAnswer)
+
+            GetNewQuestion(numberOfQuestion, textOfQuestion)
+        }
+    }
+
+    fun SetButtonsColor(buttonTrue: Button, buttonFalse: Button, buttonNext: Button, userAnswer: String): Unit {
+
+        buttonNext.setBackgroundColor(getResources().getColor(R.color.neutralButton))
+        buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
+        buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
+
+        if (userAnswer == "nothing"){
+            buttonTrue.isEnabled = true
+            buttonFalse.isEnabled = true
+            buttonNext.isEnabled = false
 
             if (quizViewModel.countOfQuestion == questionList.count()){
-                buttonTrue.isClickable = false
-                buttonFalse.isClickable = false
+                buttonTrue.isEnabled = false
+                buttonFalse.isEnabled = false
                 buttonNext.isVisible = false
             }
-
-            buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
-            buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
-            GetNewQuestion(numberOfQuestion, textOfQuestion)
+        }
+        else if(userAnswer == "true"){
+            if (questionList[quizViewModel.countOfQuestion - 1].GetDecision(userAnswer.toBoolean())){
+                buttonTrue.setBackgroundColor(getResources().getColor(R.color.rightButton))
+            }
+            else{
+                buttonTrue.setBackgroundColor(getResources().getColor(R.color.incorrectButton))
+            }
+            buttonTrue.isEnabled = false
+            buttonFalse.isEnabled = false
+            buttonNext.isEnabled = true
+        }
+        else if(userAnswer == "false"){
+            if (questionList[quizViewModel.countOfQuestion - 1].GetDecision(userAnswer.toBoolean())){
+                buttonFalse.setBackgroundColor(getResources().getColor(R.color.rightButton))
+            }
+            else{
+                buttonFalse.setBackgroundColor(getResources().getColor(R.color.incorrectButton))
+            }
+            buttonFalse.isEnabled = false
+            buttonTrue.isEnabled = false
+            buttonNext.isEnabled = true
         }
     }
 
@@ -87,10 +115,6 @@ class MainActivity : AppCompatActivity() {
 
         if (questionList[quizViewModel.countOfQuestion - 1].GetDecision(answer)){
             quizViewModel.countRightAnswer++
-            button.setBackgroundColor(getResources().getColor(R.color.rightButton))
-        }
-        else{
-            button.setBackgroundColor(getResources().getColor(R.color.incorrectButton))
         }
     }
 

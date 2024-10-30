@@ -8,5 +8,5 @@ class QuizViewModel : ViewModel() {
 
     var countOfQuestion = 1
     var countRightAnswer = 0
-    var answer = "nothing"
+    var userAnswer = "nothing"
 }
