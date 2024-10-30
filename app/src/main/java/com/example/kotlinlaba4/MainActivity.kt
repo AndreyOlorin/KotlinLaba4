@@ -2,6 +2,7 @@ package com.example.kotlinlaba4
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -28,10 +29,14 @@ class MainActivity : AppCompatActivity() {
     var countOfQuestion = 0
     var countRightAnswer = 0
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+
 
         val numberOfQuestion = findViewById<TextView>(R.id.numberOfQuestion)
         val textOfQuestion = findViewById<TextView>(R.id.textOfQuestion)
@@ -44,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         buttonFalse.setBackgroundColor(getResources().getColor(R.color.neutralButton))
         buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
         buttonNext.setBackgroundColor(getResources().getColor(R.color.neutralButton))
+
         buttonNext.isClickable = false
 
         buttonFalse.setOnClickListener(){
@@ -89,25 +95,14 @@ class MainActivity : AppCompatActivity() {
 
     fun GetNewQuestion(numberOfQuestion: TextView, textOfQuestion: TextView): Unit {
         if (countOfQuestion < questionList.count()){
-
             countOfQuestion++
             numberOfQuestion.text = countOfQuestion.toString() + " / " + questionList.count()
             textOfQuestion.text = questionList[countOfQuestion - 1].question.toString()
         }
         else{
-            numberOfQuestion.text = "Верных ответов - " + countRightAnswer.toString()
-            textOfQuestion.text = "";
+            textOfQuestion.text = "Верных ответов - " + countRightAnswer.toString()
+            textOfQuestion.setTextSize(COMPLEX_UNIT_SP, 26F)
         }
     }
 }
 
-class Question(val question: String, val decision: Boolean) {
-
-    fun GetDecision(answer: Boolean): Boolean {
-        if (answer == decision){
-            return true
-        }
-        return false
-    }
-
-}
