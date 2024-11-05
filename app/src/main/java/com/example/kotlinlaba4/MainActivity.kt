@@ -18,18 +18,18 @@ class MainActivity : AppCompatActivity() {
 
     private val quizViewModel: QuizViewModel by viewModels()
 
-    val question1: Question = Question("Самая большая пустыня в мире — это Сахара", false)
-    val question2: Question = Question("Нил — самая длинная река в мире", false)
-    val question3: Question = Question("В Антарктиде нет постоянного населения", true)
-    val question4: Question = Question("В Европе нет ни одной страны, где официальным языком является арабский", false)
-    val question5: Question = Question("Индийский океан является третьим по величине океаном на Земле", true)
-    val question6: Question = Question("В Бразилии находится крупнейший тропический лес в мире — Амазонка", true)
-    val question7: Question = Question("Африка — это единственный континент, через который проходит экватор", false)
-    val question8: Question = Question("Вторая по площади страна - Канада", true)
-    val question9: Question = Question("Швейцария известна своими широкими пляжами и курортами на побережье моря", false)
-    val question10: Question = Question("Греция состоит из более чем 6000 островов", true)
+    //val question1: Question = Question("Самая большая пустыня в мире — это Сахара", false)
+    //val question2: Question = Question("Нил — самая длинная река в мире", false)
+    //val question3: Question = Question("В Антарктиде нет постоянного населения", true)
+    //val question4: Question = Question("В Европе нет ни одной страны, где официальным языком является арабский", false)
+    //val question5: Question = Question("Индийский океан является третьим по величине океаном на Земле", true)
+    //val question6: Question = Question("В Бразилии находится крупнейший тропический лес в мире — Амазонка", true)
+    //val question7: Question = Question("Африка — это единственный континент, через который проходит экватор", false)
+    //val question8: Question = Question("Вторая по площади страна - Канада", true)
+    //val question9: Question = Question("Швейцария известна своими широкими пляжами и курортами на побережье моря", false)
+    //val question10: Question = Question("Греция состоит из более чем 6000 островов", true)
 
-    val questionList = mutableListOf(question1, question2, question3, question4, question5, question6, question7, question8, question9, question10)
+    //val questionList = mutableListOf(question1, question2, question3, question4, question5, question6, question7, question8, question9, question10)
 
     //var countOfQuestion = 0
     //var countRightAnswer = 0
@@ -49,13 +49,14 @@ class MainActivity : AppCompatActivity() {
 
 
         cheatButton.setOnClickListener { // Начало CheatActivity
-            val intent = Intent(this,
-                CheatActivity::class.java)
+            val answerIsTrue = quizViewModel.currentQuestionAnswer
+            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
             startActivity(intent)
+
         }
 
-        numberOfQuestion.text = quizViewModel.countOfQuestion.toString() + " / " + questionList.count()
-        textOfQuestion.text = questionList[quizViewModel.countOfQuestion - 1].question.toString()
+        numberOfQuestion.text = quizViewModel.countOfQuestion.toString() + " / " + quizViewModel.questionList.count()
+        textOfQuestion.text = quizViewModel.questionList[quizViewModel.countOfQuestion - 1].question.toString()
 
         SetButtonsColor(buttonTrue, buttonFalse, buttonNext, quizViewModel.userAnswer)
 
@@ -92,14 +93,14 @@ class MainActivity : AppCompatActivity() {
             buttonFalse.isEnabled = true
             buttonNext.isEnabled = false
 
-            if (quizViewModel.countOfQuestion == questionList.count()){
+            if (quizViewModel.countOfQuestion == quizViewModel.questionList.count()){
                 buttonTrue.isEnabled = false
                 buttonFalse.isEnabled = false
                 buttonNext.isVisible = false
             }
         }
         else if(userAnswer == "true"){
-            if (questionList[quizViewModel.countOfQuestion - 1].GetDecision(userAnswer.toBoolean())){
+            if (quizViewModel.questionList[quizViewModel.countOfQuestion - 1].GetDecision(userAnswer.toBoolean())){
                 buttonTrue.setBackgroundColor(getResources().getColor(R.color.rightButton))
             }
             else{
@@ -110,7 +111,7 @@ class MainActivity : AppCompatActivity() {
             buttonNext.isEnabled = true
         }
         else if(userAnswer == "false"){
-            if (questionList[quizViewModel.countOfQuestion - 1].GetDecision(userAnswer.toBoolean())){
+            if (quizViewModel.questionList[quizViewModel.countOfQuestion - 1].GetDecision(userAnswer.toBoolean())){
                 buttonFalse.setBackgroundColor(getResources().getColor(R.color.rightButton))
             }
             else{
@@ -124,16 +125,16 @@ class MainActivity : AppCompatActivity() {
 
     fun SetAnswer(answer: Boolean, button: Button): Unit {
 
-        if (questionList[quizViewModel.countOfQuestion - 1].GetDecision(answer)){
+        if (quizViewModel.questionList[quizViewModel.countOfQuestion - 1].GetDecision(answer)){
             quizViewModel.countRightAnswer++
         }
     }
 
     fun GetNewQuestion(numberOfQuestion: TextView, textOfQuestion: TextView): Unit {
-        if (quizViewModel.countOfQuestion < questionList.count()){
+        if (quizViewModel.countOfQuestion < quizViewModel.questionList.count()){
             quizViewModel.countOfQuestion++
-            numberOfQuestion.text = quizViewModel.countOfQuestion.toString() + " / " + questionList.count()
-            textOfQuestion.text = questionList[quizViewModel.countOfQuestion - 1].question.toString()
+            numberOfQuestion.text = quizViewModel.countOfQuestion.toString() + " / " + quizViewModel.questionList.count()
+            textOfQuestion.text = quizViewModel.questionList[quizViewModel.countOfQuestion - 1].question.toString()
         }
         else{
             textOfQuestion.text = "Верных ответов - " + quizViewModel.countRightAnswer.toString()
