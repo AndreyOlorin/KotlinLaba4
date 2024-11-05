@@ -1,11 +1,13 @@
 package com.example.kotlinlaba4
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,6 +15,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.activity.viewModels
+
+
+private const val REQUEST_CODE_CHEAT = 0
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         cheatButton.setOnClickListener { // Начало CheatActivity
             val answerIsTrue = quizViewModel.currentQuestionAnswer
             val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
-            startActivity(intent)
+            startActivityForResult(intent, REQUEST_CODE_CHEAT)
 
         }
 
@@ -111,6 +116,10 @@ class MainActivity : AppCompatActivity() {
         if (quizViewModel.questionList[quizViewModel.countOfQuestion - 1].GetDecision(answer)){
             quizViewModel.countRightAnswer++
         }
+
+        if (quizViewModel.isCheater){
+            Toast.makeText(this, R.string.judgment_toast, Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun GetNewQuestion(numberOfQuestion: TextView, textOfQuestion: TextView): Unit {
@@ -122,6 +131,18 @@ class MainActivity : AppCompatActivity() {
         else{
             textOfQuestion.text = "Верных ответов - " + quizViewModel.countRightAnswer.toString()
             textOfQuestion.setTextSize(COMPLEX_UNIT_SP, 26F)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+    {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode != Activity.RESULT_OK) {
+            return
+        }
+        if (requestCode == REQUEST_CODE_CHEAT)
+        {
+            quizViewModel.isCheater = data?.getBooleanExtra(EXTRA_ANSWER_SHOWN, false) ?: false
         }
     }
 }

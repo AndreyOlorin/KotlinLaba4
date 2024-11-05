@@ -22,6 +22,7 @@ class QuizViewModel : ViewModel() {
     var countOfQuestion = 1
     var countRightAnswer = 0
     var userAnswer = "nothing"
+    var isCheater = false
 
     val currentQuestionAnswer: Boolean get() = questionList[countOfQuestion - 1].decision
     val currentQuestionText: String get() = questionList[countOfQuestion - 1].question
