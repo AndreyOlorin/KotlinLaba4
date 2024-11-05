@@ -1,5 +1,6 @@
 package com.example.kotlinlaba4
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue.COMPLEX_UNIT_SP
@@ -32,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     //var countOfQuestion = 0
     //var countRightAnswer = 0
+    //private lateinit var trueButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,14 @@ class MainActivity : AppCompatActivity() {
         val buttonFalse = findViewById<Button>(R.id.buttonFalse)
         val buttonTrue = findViewById<Button>(R.id.buttonTrue)
         val buttonNext = findViewById<Button>(R.id.buttonNext)
+        val cheatButton = findViewById<Button>(R.id.buttonCheat)
+
+
+        cheatButton.setOnClickListener { // Начало CheatActivity
+            val intent = Intent(this,
+                CheatActivity::class.java)
+            startActivity(intent)
+        }
 
         numberOfQuestion.text = quizViewModel.countOfQuestion.toString() + " / " + questionList.count()
         textOfQuestion.text = questionList[quizViewModel.countOfQuestion - 1].question.toString()
@@ -71,6 +81,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun SetButtonsColor(buttonTrue: Button, buttonFalse: Button, buttonNext: Button, userAnswer: String): Unit {
+
 
         buttonNext.setBackgroundColor(getResources().getColor(R.color.neutralButton))
         buttonTrue.setBackgroundColor(getResources().getColor(R.color.neutralButton))
