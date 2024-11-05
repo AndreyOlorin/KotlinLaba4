@@ -36,11 +36,15 @@ class MainActivity : AppCompatActivity() {
         val cheatButton = findViewById<Button>(R.id.buttonCheat)
 
 
-        cheatButton.setOnClickListener { // Начало CheatActivity
-            val answerIsTrue = quizViewModel.currentQuestionAnswer
-            val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
-            startActivityForResult(intent, REQUEST_CODE_CHEAT)
-
+        cheatButton.setOnClickListener {
+            if (quizViewModel.cheatCount < 3) {
+                val answerIsTrue = quizViewModel.currentQuestionAnswer
+                val intent = CheatActivity.newIntent(this@MainActivity, answerIsTrue)
+                startActivityForResult(intent, REQUEST_CODE_CHEAT)
+            }
+            else{
+                Toast.makeText(this, R.string.judgment_toast, Toast.LENGTH_SHORT).show()
+            }
         }
 
         numberOfQuestion.text = quizViewModel.countOfQuestion.toString() + " / " + quizViewModel.questionList.count()
@@ -61,10 +65,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonNext.setOnClickListener(){
-
             quizViewModel.userAnswer = "nothing"
             SetButtonsColor(buttonTrue, buttonFalse, buttonNext, quizViewModel.userAnswer)
 
+            if (quizViewModel.isCheater == true){
+                quizViewModel.cheatCount++
+            }
+            quizViewModel.isCheater = false
             GetNewQuestion(numberOfQuestion, textOfQuestion)
         }
     }
@@ -117,9 +124,9 @@ class MainActivity : AppCompatActivity() {
             quizViewModel.countRightAnswer++
         }
 
-        if (quizViewModel.isCheater){
-            Toast.makeText(this, R.string.judgment_toast, Toast.LENGTH_SHORT).show()
-        }
+        //if (quizViewModel.isCheater){
+        //    Toast.makeText(this, R.string.judgment_toast, Toast.LENGTH_SHORT).show()
+        //}
     }
 
     fun GetNewQuestion(numberOfQuestion: TextView, textOfQuestion: TextView): Unit {

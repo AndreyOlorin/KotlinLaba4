@@ -3,7 +3,7 @@ package com.example.kotlinlaba4
 import android.util.Log
 import androidx.lifecycle.ViewModel
 
-//private const val TAG = "QuizViewModel"
+private const val TAG = "QuizViewModel"
 class QuizViewModel : ViewModel() {
 
     val question1: Question = Question("Самая большая пустыня в мире — это Сахара", false)
@@ -23,6 +23,7 @@ class QuizViewModel : ViewModel() {
     var countRightAnswer = 0
     var userAnswer = "nothing"
     var isCheater = false
+    var cheatCount = 0
 
     val currentQuestionAnswer: Boolean get() = questionList[countOfQuestion - 1].decision
     val currentQuestionText: String get() = questionList[countOfQuestion - 1].question
