@@ -8,7 +8,7 @@
     tools:context=".CheatActivity">
 
     <TextView
-        android:id="@+id/textOfQuestion"
+        android:id="@+id/answerTextView"
         android:layout_width="290dp"
         android:layout_height="99dp"
         android:gravity="center"
@@ -22,7 +22,7 @@
         app:layout_constraintVertical_bias="0.123" />
 
     <Button
-        android:id="@+id/buttonBack"
+        android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Back"
@@ -34,7 +34,7 @@
         app:layout_constraintVertical_bias="0.348" />
 
     <Button
-        android:id="@+id/buttonGetAnswer"
+        android:id="@+id/showAnswerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Yes"

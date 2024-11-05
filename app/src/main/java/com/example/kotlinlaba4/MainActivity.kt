@@ -18,23 +18,6 @@ class MainActivity : AppCompatActivity() {
 
     private val quizViewModel: QuizViewModel by viewModels()
 
-    //val question1: Question = Question("Самая большая пустыня в мире — это Сахара", false)
-    //val question2: Question = Question("Нил — самая длинная река в мире", false)
-    //val question3: Question = Question("В Антарктиде нет постоянного населения", true)
-    //val question4: Question = Question("В Европе нет ни одной страны, где официальным языком является арабский", false)
-    //val question5: Question = Question("Индийский океан является третьим по величине океаном на Земле", true)
-    //val question6: Question = Question("В Бразилии находится крупнейший тропический лес в мире — Амазонка", true)
-    //val question7: Question = Question("Африка — это единственный континент, через который проходит экватор", false)
-    //val question8: Question = Question("Вторая по площади страна - Канада", true)
-    //val question9: Question = Question("Швейцария известна своими широкими пляжами и курортами на побережье моря", false)
-    //val question10: Question = Question("Греция состоит из более чем 6000 островов", true)
-
-    //val questionList = mutableListOf(question1, question2, question3, question4, question5, question6, question7, question8, question9, question10)
-
-    //var countOfQuestion = 0
-    //var countRightAnswer = 0
-    //private lateinit var trueButton: Button
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -56,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         numberOfQuestion.text = quizViewModel.countOfQuestion.toString() + " / " + quizViewModel.questionList.count()
-        textOfQuestion.text = quizViewModel.questionList[quizViewModel.countOfQuestion - 1].question.toString()
+        textOfQuestion.text = quizViewModel.currentQuestionText
 
         SetButtonsColor(buttonTrue, buttonFalse, buttonNext, quizViewModel.userAnswer)
 
@@ -134,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         if (quizViewModel.countOfQuestion < quizViewModel.questionList.count()){
             quizViewModel.countOfQuestion++
             numberOfQuestion.text = quizViewModel.countOfQuestion.toString() + " / " + quizViewModel.questionList.count()
-            textOfQuestion.text = quizViewModel.questionList[quizViewModel.countOfQuestion - 1].question.toString()
+            textOfQuestion.text = quizViewModel.currentQuestionText
         }
         else{
             textOfQuestion.text = "Верных ответов - " + quizViewModel.countRightAnswer.toString()
